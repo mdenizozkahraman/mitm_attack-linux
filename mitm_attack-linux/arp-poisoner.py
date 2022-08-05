@@ -1,7 +1,6 @@
 # created by Mehmet Deniz Ozkahraman
 
 import scapy.all as scapy
-import subprocess
 import time
 import optparse
 
@@ -21,8 +20,6 @@ def user_input():
 
     return options
 
-def ip_forward():
-    subprocess.call(["echo 1 > /proc/sys/net/ipv4/ip_forward"])
 
 def get_mac_address(user_input):
     arp_request = scapy.ARP(pdst=user_input)
@@ -62,7 +59,6 @@ by mdo //-
 
 """)
 
-ip_forward()
 
 number = 0
 
@@ -82,7 +78,7 @@ try:
 
         time.sleep(3)
 except KeyboardInterrupt:
-    print("\n Quit & Reset")
+    print("\n Attack terminated and IP-MAC Address matches fixed.")
     arp_poisoning_reset(user_target_ip,user_gateway_ip)
     arp_poisoning_reset(user_gateway_ip, user_target_ip)
 
